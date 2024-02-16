@@ -1,47 +1,56 @@
 #!/usr/bin/env python3
+
 import re
+
 class MyString:
-    def __init__(self, value):
-        self._value = None
-        self.value = value  # Use the property setter for validation
+  def __init__(self, value=""):
+    self.value = value
 
-    @property
-    def value(self):
-        return self._value
+  @property
+  def value(self):
+    return self._value
+  
+  @value.setter
+  def value(self, value):
+    if isinstance (value, str):
+      self._value = value
+    else:
+      print("The value must be a string.")
+      self._value = None
+      return 0
 
-    @value.setter
-    def value(self, new_value):
-        if isinstance(new_value, str):
-            self._value = new_value
-        else:
-            raise ValueError("Value must be a string")
+  def is_sentence(self):
+    if self.value.endswith("."):
+      return True
+    else:
+      return False
+    
+  def is_question(self):
+    if self.value.endswith("?"):
+      return True
+    else:
+      return False
+    
+  def is_exclamation(self):
+    if self.value.endswith("!"):
+      return True
+    else:
+      return False
+  
+  def count_sentences(self):
+    if not self.value:
+      return 0
 
-    def is_sentence(self):
-        return self._value.endswith('.')
+    if isinstance(self.value, str):
+      regex = r"(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?|\!)\s"
+      m = re.split(regex, self.value)
+      return len(m)
+    else:
+      print("The value must be a string.")
+      self._value = None
+      return 0
 
-    def is_question(self):
-        return self._value.endswith('?')
 
-    def is_exclamation(self):
-        return self._value.endswith('!')
-
-    def count_sentences(self):
-        # Split the value based on '.', '?', and '!'
-        sentences = [s.strip() for s in re.split(r'[.!?]', self._value) if s]
-        return len(sentences)
-
-# Example usage:
-try:
-    my_str = MyString("Hello, World!")
-    print(my_str.is_sentence())  # Output: True
-    print(my_str.is_question())  # Output: False
-    print(my_str.is_exclamation())  # Output: False
-    print(my_str.count_sentences())  # Output: 1
-
-    my_str.value = "How are you today?"
-    print(my_str.is_sentence())  # Output: False
-    print(my_str.is_question())  # Output: True
-    print(my_str.is_exclamation())  # Output: False
-    print(my_str.count_sentences())  # Output: 1
-except ValueError as e:
-    print(f"Error: {e}")
+string = MyString()
+string.value = 1
+string.count_sentences()
